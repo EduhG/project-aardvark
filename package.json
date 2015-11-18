@@ -13,6 +13,8 @@
   "author": "'Harrison Kamau'",
   "license": "ISC",
   "dependencies": {
-    "dispatch": "^1.0.0"
+    "dispatch": "^1.0.0",
+    "mongoose": "^4.2.6",
+    "querystring": "^0.2.0"
   }
 }

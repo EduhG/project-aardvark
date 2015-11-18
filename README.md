@@ -50,4 +50,62 @@ It is written using JavaScript.
 				npm install --save <module_name>
 			```
 
-		
+	# RESTFUL ROUTES 
+		## What is REST?
+			-REST is an acronym that stands for Representational State Transfer
+			- It was developed to provide a standard through which the client could communicate with the server over the web.
+			
+		##Why REST?
+		- REST provides a standard method for resource manipulation server.
+		##Components of REST
+			- A URL that represents the resource 
+			- A HTTP verb/method that maps to a controller on the server
+
+		##Using REST in a Web Application
+		1. Client sends a request: `GET/movie/198`
+		2. The server's route maps that request and the verb to a controller's action:
+			```
+			The request/movie/198 would be mapped to a controller called Movie which would have an action called show to handle that request
+		3. The show action will communicate with the Movie Model and query it for a movie with the id 198.
+			```
+
+		## Common patterns of restful verbs and actions
+		Assuming you have a resource called photo. The RESTFUL routes that would apply to that resource would be as follows
+			1. GET/photos/
+				- Maps out to a controller called PhotosController which has a method called index
+		##CORS
+			- This is an acronym for Cross Origin Resource Sharing.
+			- It refers to the ability of one domain to use/ask for resources from another domain.
+			For example: 
+				The html with this image tag is being served. 
+				from http://domain-a.com <img src= "http://domain-a.com/mouse.jpg" 
+				It is requesting an image from a http://domain-b.com which is a different domain from where it's being hosted.
+			- This works when a html page does it, but does NOT work when using scripts to perform the request. If a <script on that page were to ask for the image using the XMLHttpRequest object (using Ajax), the browser would throw a CORS server error
+			- The only way that a script can access a different resource from other domain is if the server on that domain allows it to.
+			- This is done by adding that domain to the request Header known as Access-Control-Allow-Origin
+			```
+			Access-Control-Allow-Origin: <allowed domains or * to allow any domain>
+			```
+
+
+			##NoSQL Databases
+			 - These are databases that define ways of accessing and storing data in ways other than using relations
+
+			 ## Why NoSQL
+			 	- Was developed as a response to the rising demand of: 
+			 			+ on-demand
+			 			+ scalable
+			 			+ easily replicable
+			 			+ minimal configuration
+			 		databases that were required to respond to the needs of modern applications
+			 ##Types of NoSQL
+			 	- Document databases
+			 	- Graph stores
+			 	- Key-value stores
+			 	- Wide-column stores
+
+			## Looking for help
+		 		- Documentation 
+		 		- Forums
+		 		- Tutorials
+		 		- search engine - Google, Bing, DuckDuckGo
