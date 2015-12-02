@@ -1,70 +1,99 @@
-
 //express 
 var express = require('express');
 var cors = require('express-cors')
 
 //invoking express
-var app = express(); 
+var app = express();
 
 //express middleware
 var bodyParser = require('body-parser');
+
 
 //include mongoose
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/project-aardvark');
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-  });
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 //define our schema
 var movieSchema = mongoose.Schema({
-	title: String,
-	year_of_release: Number
+    title: String,
+    year_of_release: Number,
+    rating:{type: Number, default: 0, min: 0, max: 10}
 });
 
 // compile our model
 var Movie = mongoose.model('Movie', movieSchema);
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 
-app.get('/movies',function(req, res){
-	
-		Movie.find(function(err, movie){
-			if(err){
-				console.log(err);
-			}else{
-								// res.redirect('movies');
-								res.json(movie);
-							}
-		});
-	});
+app.get('/movies', function(req, res) {
 
-app.post('/movies/new', function(req, res){
-	console.log(req.body);
-	formData = req.body;
-
-	var movie = new Movie(formData);
-	movie.save(function(err, movie){
-		if(err){
-			console.log(err);
-		}else {
-			console.log('successfully saved the movie');
-			res.redirect('/movies');
-		}
-
-		});
-	});
-app.get('/movies/:id', function(req, res) {
-  movieId = req.params.id;
-// retrieve movie from Mongo
-Movie.findById(movieId, function (err, movie) {
-	if (err) return console.log(err);
-	res.json(movie);
-	});
+    Movie.find(function(err, movie) {
+        if (err) {
+            console.log(err);
+        } else {
+            // res.redirect('movies');
+            res.json(movie);
+        }
+    });
 
 });
 
-app.listen(8081, function(){
-console.log('Server running on 127.0.0.1:8081');
+app.post('/movies/new', function(req, res) {
+    console.log(req.body);
+    formData = req.body;
+
+    var movie = new Movie(formData);
+    movie.save(function(err, movie) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log('successfully saved the movie');
+            res.redirect('/movies');
+        }
+
+    });
+});
+app.get('/movies/:id', function(req, res) {
+    movieId = req.params.id;
+    // retrieve movie from Mongodb
+    Movie.findById(movieId, function(err, movie) {
+        if (err) return console.log(err);
+        res.json(movie);
+    });
+
+});
+app.put('/movies/:id', function(req, res) {
+    movieId = req.params.id;
+    userRating = req.body.rating;
+    // retrieve movie from Mongodb
+    Movie.findById(movieId, function(err, movie) {
+        if (err) return console.log(err);
+
+            movie.rating = userRating;
+            movie.save(function(err, movie){
+                if (err) return console.log(err);
+
+        res.json(movie);
+        });
+        
+    });
+
+});
+app.delete('/movies/: id', function(req, res){
+    movieId = req.params.id;
+
+    Movie.remove({_id: movieId}, function(err) {
+        if (err) return console.log(err);
+        res.send("Movie was deleted");
+    });
+});
+
+app.listen(8081, function() {
+    console.log('Server running on 127.0.0.1:8081');
 });

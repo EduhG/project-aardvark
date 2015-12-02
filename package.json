@@ -1,23 +1,23 @@
 {
-  "name": "project-aardvark",
-  "version": "1.0.0",
-  "description": "'This is a movie listing site'",
-  "main": "index.js",
-  "scripts": {
-    "test": "'Hello world'"
-  },
-  "keywords": [
-    "'Movie'",
-    "'imdb'"
-  ],
-  "author": "'Harrison Kamau'",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.14.1",
-    "dispatch": "^1.0.0",
-    "express": "^4.13.3",
-    "express-cors": "0.0.3",
-    "mongoose": "^4.2.6",
-    "querystring": "^0.2.0"
-  }
+    "name": "project-aardvark",
+    "version": "1.0.0",
+    "description": "'This is a movie listing site'",
+    "main": "index.js",
+    "scripts": {
+        "test": "'Hello world'"
+    },
+    "keywords": [
+        "'Movie'",
+        "'imdb'"
+    ],
+    "author": "'Harrison Kamau'",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.14.1",
+        "dispatch": "^1.0.0",
+        "express": "^4.13.3",
+        "express-cors": "0.0.3",
+        "mongoose": "^4.2.6",
+        "querystring": "^0.2.0"
+    }
 }
