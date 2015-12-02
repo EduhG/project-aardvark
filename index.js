@@ -9,22 +9,19 @@ var app = express();
 //express middleware
 var bodyParser = require('body-parser');
 
- 
-app.use(cors({
-    allowedOrigins: [
-        '127.0.0.1:8080'
-    ]
-}));
-
-
 //include mongoose
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/terrific-tuesday');
+mongoose.connect('mongodb://localhost/project-aardvark');
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+  });
 //define our schema
 var movieSchema = mongoose.Schema({
-	name: String,
+	title: String,
 	year_of_release: Number
-})
+});
 
 // compile our model
 var Movie = mongoose.model('Movie', movieSchema);
@@ -33,52 +30,37 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/movies',function(req, res){
 	
-							movies = [
-							{
-								title: 'Dangerous Arrangement',
-								Category: ['Thriller', 'Drama','Mystery'],
-								main_actors: [{
-									first_name: 'Amy',
-									last_name: 'Ellen'
-								},{}]
-							},
-							{
-								title: 'Scorpion',
-								Category: ['Mystery','Drama','Thriller'],
-								main_actors: [{
-									first_name: 'Walter',
-									last_name: 'Brien'
-								},{
-									first_name: 'Cape',
-									last_name: 'Galloy'
-								}]
+		Movie.find(function(err, movie){
+			if(err){
+				console.log(err);
+			}else{
+								// res.redirect('movies');
+								res.json(movie);
 							}
+		});
+	});
 
-
-							]; 
-							res.redirect('http://www.google.com');
-							// res.json(movies);
-						});
-
-
-
-
-
-
-
-app.post('/movies', function(req, res){
+app.post('/movies/new', function(req, res){
 	console.log(req.body);
 	formData = req.body;
-	var movie = new Movie(
-					{
-						title: formData.title,
-						year_of_release: formData.year_of_release
 
-					}
-				);
 	var movie = new Movie(formData);
 	movie.save(function(err, movie){
+		if(err){
+			console.log(err);
+		}else {
+			console.log('successfully saved the movie');
+			res.redirect('/movies');
+		}
 
+		});
+	});
+app.get('/movies/:id', function(req, res) {
+  movieId = req.params.id;
+// retrieve movie from Mongo
+Movie.findById(movieId, function (err, movie) {
+	if (err) return console.log(err);
+	res.json(movie);
 	});
 
 });
