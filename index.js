@@ -1,6 +1,9 @@
 //express 
 var express = require('express');
-var cors = require('express-cors')
+// var cors = require('express-cors');
+var cons = require('consolidate');
+
+
 
 //invoking express
 var app = express();
@@ -26,21 +29,27 @@ var movieSchema = mongoose.Schema({
 
 // compile our model
 var Movie = mongoose.model('Movie', movieSchema);
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.engine('html', cons.liquid);
+app.set('views', './views');
+app.set('view engine', 'html');
+
+// epress middleware
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.get('/movies', function(req, res) {
 
-    Movie.find(function(err, movie) {
+    Movie.find()
+        .select('title  year_of_release  rating')
+        .exec(function(err, movies) {
         if (err) {
             console.log(err);
         } else {
             // res.redirect('movies');
-            res.json(movie);
+            res.render('index', {"movies": movies});
+            // res.json(movie);
         }
-    });
+    })
 
 });
 
