@@ -24,7 +24,8 @@ app.use(function(req, res, next) {
 var movieSchema = mongoose.Schema({
     title: String,
     year_of_release: Number,
-    rating:{type: Number, default: 0, min: 0, max: 10}
+    rating:{type: Number, default: 0, min: 0, max: 10},
+    details: String
 });
 
 // compile our model
@@ -49,11 +50,24 @@ app.get('/movies', function(req, res) {
             res.render('index', {"movies": movies});
             // res.json(movie);
         }
-    })
+    });
 
 });
-
-app.post('/movies/new', function(req, res) {
+app.get('/movies/new', function(req, res) {
+    res.render('new');
+});
+app.get('/movies/:id/edit', function(req, res) {
+    movieId = req.params.id;
+    // retrieve movie from Mongodb
+        Movie.findById(movieId, function(err, movie) {
+        if (err) return console.log(err);
+        // res.json(movie);
+        res.render('edit', {
+            "movie": movie
+        });  
+    });
+});
+app.post('/movies', function(req, res) {
     console.log(req.body);
     formData = req.body;
 
@@ -73,22 +87,27 @@ app.get('/movies/:id', function(req, res) {
     // retrieve movie from Mongodb
     Movie.findById(movieId, function(err, movie) {
         if (err) return console.log(err);
-        res.json(movie);
+        // res.json(movie);
+        res.render('movie_detail', {
+            "movie": movie
+        });
     });
-
 });
+  
 app.put('/movies/:id', function(req, res) {
     movieId = req.params.id;
     userRating = req.body.rating;
+    movieDetails = req.body.details;
     // retrieve movie from Mongodb
     Movie.findById(movieId, function(err, movie) {
         if (err) return console.log(err);
 
             movie.rating = userRating;
+            movie.details = movieDetails;
             movie.save(function(err, movie){
                 if (err) return console.log(err);
 
-        res.json(movie);
+        res.redirect('/movies');
         });
         
     });
