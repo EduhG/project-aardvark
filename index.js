@@ -30,12 +30,14 @@ var movieSchema = mongoose.Schema({
 
 // compile our model
 var Movie = mongoose.model('Movie', movieSchema);
+// express setting
 app.engine('html', cons.liquid);
 app.set('views', './views');
 app.set('view engine', 'html');
 
 // epress middleware
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 
 app.get('/movies', function(req, res) {
@@ -48,7 +50,7 @@ app.get('/movies', function(req, res) {
         } else {
             // res.redirect('movies');
             res.render('index', {"movies": movies});
-            // res.json(movie);
+            // res.json(movies);
         }
     });
 
@@ -56,19 +58,9 @@ app.get('/movies', function(req, res) {
 app.get('/movies/new', function(req, res) {
     res.render('new');
 });
-app.get('/movies/:id/edit', function(req, res) {
-    movieId = req.params.id;
-    // retrieve movie from Mongodb
-        Movie.findById(movieId, function(err, movie) {
-        if (err) return console.log(err);
-        // res.json(movie);
-        res.render('edit', {
-            "movie": movie
-        });  
-    });
-});
+
 app.post('/movies', function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     formData = req.body;
 
     var movie = new Movie(formData);
@@ -77,7 +69,7 @@ app.post('/movies', function(req, res) {
             console.log(err);
         } else {
             console.log('successfully saved the movie');
-            res.redirect('/movies');
+            res.redirect('/movies' );
         }
 
     });
@@ -88,39 +80,80 @@ app.get('/movies/:id', function(req, res) {
     Movie.findById(movieId, function(err, movie) {
         if (err) return console.log(err);
         // res.json(movie);
-        res.render('movie_detail', {
-            "movie": movie
+        res.render('detail', {
+           "movie": movie
         });
+
     });
 });
-  
-app.put('/movies/:id', function(req, res) {
+app.get('/movies/:id/edit', function(req, res) {
     movieId = req.params.id;
+    // retrieve movie from Mongodb
+        Movie.findById(movieId, function(err, movie) {
+        if (err) return console.log(err);
+         // res.json(movie);
+        res.render('edit', {
+           "movie": movie
+       });  
+    });
+});
+ function updateMovie(method, req, res){
+     movieId = req.params.id;
     userRating = req.body.rating;
-    movieDetails = req.body.details;
+    userTitle = req.body.title;
+    userYearOfRelease = req.body.year_of_release;
+    // movieDetails = req.body.details;
     // retrieve movie from Mongodb
     Movie.findById(movieId, function(err, movie) {
         if (err) return console.log(err);
 
             movie.rating = userRating;
-            movie.details = movieDetails;
+            movie.title = userTitle;
+            movie.year_of_release = userYearOfRelease;
             movie.save(function(err, movie){
                 if (err) return console.log(err);
+                if(method === 'PUT'){
+                    res.json(movie);
+                }else{
+                    res.redirect('/movies/' + movie._id);
+                };
 
-        res.redirect('/movies');
+      
         });
         
     });
 
+ }
+ app.post('/movies/:id/edit', function(req, res){
+    updateMovie('POST', req, res);
+ })
+app.put('/movies/:id', function(req, res) {
+   updateMovie('PUT', req, res);
 });
-app.delete('/movies/: id', function(req, res){
-    movieId = req.params.id;
+
+function deleteMovie(method, req, res){
+     movieId = req.params.id;
 
     Movie.remove({_id: movieId}, function(err) {
         if (err) return console.log(err);
-        res.send("Movie was deleted");
+        if(method === 'GET'){
+            res.redirect('/movies');
+            console.log("You have deleted a movie");
+        }else{
+            res.send("Movie was deleted");   
+        }
+        
     });
+};
+
+app.get('/movies/:id/delete', function(req, res){
+    deleteMovie('GET',req, res);
+})
+
+app.delete('/movies/:id', function(req, res){
+    deleteMovie('DELETE', req, res);
 });
+   
 
 app.listen(8081, function() {
     console.log('Server running on 127.0.0.1:8081');

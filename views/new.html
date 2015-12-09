@@ -4,14 +4,15 @@
 	<title>new</title>
 </head>
 <body>
+	{% include 'navbar' %}
 	<form action="/movies" method="post">
-	<label for="">TITLE</label>
-	<input type="text" name="title" placeholder="enter title" required validate>
-	<label for="">DIRECTOR</label>
-	<input type="text" name="director" placeholder="enter director" required validate>
-	<label for="">RATING</label>
-	<input type="number" name="rating" placeholder="enter rating" required validate>
-	<button type="submit">Add Movie</button>
+		<label for="">TITLE</label>
+			<input type="text" name="title" placeholder="enter title" >
+		<label for="">YEAR OF RELEASE</label>
+			<input type="text" name="year_of_release" placeholder="enter year">
+		<label for="">RATING</label>
+			<input type="number" name="rating" placeholder="enter rating">
+		<button type="submit">Add Movie</button>
 	</form>
 </body>
 </html>

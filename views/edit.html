@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>edit</title>
+	<title>Edit {{movie.title}}</title>
 </head>
 <body>
-	<form action="/movies/{{movie._id}}" method="put">
-	<label for="">TITLE</label>
-	<input type="text" name="title" value="{{movie.title}}">
-	<label for="">YEAR OF RELEASE</label>
-	<input type="text" name="year of release" value="{{movie.year_of_release}}">
-	<label for="">RATING</label>
-	<input type="number" name="rating" value="{{movie.rating}}">
-	<button type="submit">Add Movie</button>
+	{% include 'navbar' %}
+	<form action="/movies/{{movie._id}}/edit" method="POST">
+		<label for="">TITLE</label>
+		<input type="text" name="title" value="{{movie.title}}" placeholder="title">
+		<label for="">YEAR OF RELEASE</label>
+		<input type="text" name="year of release" value="{{movie.year_of_release}}" placeholder="year of release">
+		<label for="">RATING</label>
+		<input type="number" name="rating" value="{{movie.rating}}" placeholder="rating">
+		<button type="submit">Edit Movie</button>
 	</form>
 </body>
 </html>

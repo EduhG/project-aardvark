@@ -1,0 +1,26 @@
+   
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>{{ movie.title }}</title>
+
+</head>
+
+<body>
+
+  {% include 'navbar' %}
+
+    <h1>{{ movie.title }}</h1>
+
+    <p>Year of Release: {{ movie.year_of_release }}</p>
+
+    <p>Rating: {{ movie.rating }}</p>
+
+    <a href="/movies/{{movie._id}}/edit"><button class="btn btn-primary">Edit movie</button></a>
+    <a href="/movies/{{movie._id}}/delete"><button class="btn btn-warning">Delete movie</button></a>
+
+</body>
+</html>
