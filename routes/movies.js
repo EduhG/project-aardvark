@@ -13,7 +13,7 @@ router.route('/movies')
                     console.log(err);
                 } else {
                     // res.redirect('movies');
-                    res.render('index', {
+                    res.render('/movies/index', {
                         "movies": movies
                     });
                     // res.json(movies);
@@ -40,7 +40,7 @@ router.route('/movies')
 
 router.route('/movies/new')
     .get(function(req, res) {
-        res.render('new');
+        res.render('/movies/snew');
     });
 
 function updateMovie(method, req, res) {
@@ -61,7 +61,7 @@ function updateMovie(method, req, res) {
             if (method === 'PUT') {
                 res.json(movie);
             } else {
-                res.redirect('/movies/' + movie._id);
+                res.redirect('/movies' + movie._id);
             };
 
 
@@ -96,7 +96,7 @@ router.route('/movies/:id')
         Movie.findById(movieId, function(err, movie) {
             if (err) return console.log(err);
             // res.json(movie);
-            res.render('detail', {
+            res.render('/movies/detail', {
                 "movie": movie
             });
 
@@ -117,7 +117,7 @@ router.route('/movies:id/edit')
         Movie.findById(movieId, function(err, movie) {
             if (err) return console.log(err);
             // res.json(movie);
-            res.render('edit', {
+            res.render('/movies/edit', {
                 "movie": movie
             });
         });
@@ -131,4 +131,5 @@ router.route('/movies/:id/delete')
     .get(function(req, res) {
         deleteMovie('GET', req, res);
     });
+
 module.exports = router;

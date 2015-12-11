@@ -1,6 +1,5 @@
 //include mongoose
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/project-aardvark');
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
 //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
