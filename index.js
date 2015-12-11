@@ -4,32 +4,19 @@ var express = require('express');
 var cons = require('consolidate');
 
 
-
 //invoking express
 var app = express();
+
+// passport
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+
 
 //express middleware
 var bodyParser = require('body-parser');
 
-
-//include mongoose
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/project-aardvark');
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-//define our schema
-var movieSchema = mongoose.Schema({
-    title: String,
-    year_of_release: Number,
-    rating:{type: Number, default: 0, min: 0, max: 10},
-    details: String
-});
-
-// compile our model
-var Movie = mongoose.model('Movie', movieSchema);
 // express setting
 app.engine('html', cons.liquid);
 app.set('views', './views');
@@ -39,121 +26,10 @@ app.set('view engine', 'html');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-
-app.get('/movies', function(req, res) {
-
-    Movie.find()
-        .select('title  year_of_release  rating')
-        .exec(function(err, movies) {
-        if (err) {
-            console.log(err);
-        } else {
-            // res.redirect('movies');
-            res.render('index', {"movies": movies});
-            // res.json(movies);
-        }
-    });
-
-});
-app.get('/movies/new', function(req, res) {
-    res.render('new');
-});
-
-app.post('/movies', function(req, res) {
-    // console.log(req.body);
-    formData = req.body;
-
-    var movie = new Movie(formData);
-    movie.save(function(err, movie) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log('successfully saved the movie');
-            res.redirect('/movies' );
-        }
-
-    });
-});
-app.get('/movies/:id', function(req, res) {
-    movieId = req.params.id;
-    // retrieve movie from Mongodb
-    Movie.findById(movieId, function(err, movie) {
-        if (err) return console.log(err);
-        // res.json(movie);
-        res.render('detail', {
-           "movie": movie
-        });
-
-    });
-});
-app.get('/movies/:id/edit', function(req, res) {
-    movieId = req.params.id;
-    // retrieve movie from Mongodb
-        Movie.findById(movieId, function(err, movie) {
-        if (err) return console.log(err);
-         // res.json(movie);
-        res.render('edit', {
-           "movie": movie
-       });  
-    });
-});
- function updateMovie(method, req, res){
-     movieId = req.params.id;
-    userRating = req.body.rating;
-    userTitle = req.body.title;
-    userYearOfRelease = req.body.year_of_release;
-    // movieDetails = req.body.details;
-    // retrieve movie from Mongodb
-    Movie.findById(movieId, function(err, movie) {
-        if (err) return console.log(err);
-
-            movie.rating = userRating;
-            movie.title = userTitle;
-            movie.year_of_release = userYearOfRelease;
-            movie.save(function(err, movie){
-                if (err) return console.log(err);
-                if(method === 'PUT'){
-                    res.json(movie);
-                }else{
-                    res.redirect('/movies/' + movie._id);
-                };
-
-      
-        });
-        
-    });
-
- }
- app.post('/movies/:id/edit', function(req, res){
-    updateMovie('POST', req, res);
- })
-app.put('/movies/:id', function(req, res) {
-   updateMovie('PUT', req, res);
-});
-
-function deleteMovie(method, req, res){
-     movieId = req.params.id;
-
-    Movie.remove({_id: movieId}, function(err) {
-        if (err) return console.log(err);
-        if(method === 'GET'){
-            res.redirect('/movies');
-            console.log("You have deleted a movie");
-        }else{
-            res.send("Movie was deleted");   
-        }
-        
-    });
-};
-
-app.get('/movies/:id/delete', function(req, res){
-    deleteMovie('GET',req, res);
-})
-
-app.delete('/movies/:id', function(req, res){
-    deleteMovie('DELETE', req, res);
-});
-   
+// include routes
+var routes = require('./routes/movies');
+console.log(routes);
+app.use(routes);
 
 app.listen(8081, function() {
     console.log('Server running on 127.0.0.1:8081');
