@@ -1,5 +1,7 @@
 //express 
 var express = require('express');
+var path = require('path');
+
 // var cors = require('express-cors');
 var cons = require('consolidate');
 
@@ -7,12 +9,19 @@ var cons = require('consolidate');
 //invoking express
 var app = express();
 
+// app.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+
 // passport
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var Router = require('router');
+// var Router = require('router');
 
 
 //express middleware
@@ -23,7 +32,8 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/project-aardvark');
 // express setting
 app.engine('html', cons.liquid);
-app.set('views', './views');
+// app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
 // epress middleware
@@ -37,13 +47,15 @@ app.use(expressSession({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(Router);
+// app.use(Router);
 
 // include routes
 var moviesRoutes = require('./routes/movies');
 var usersRoutes = require('./routes/users');
+var indexRoute = require('./routes/index')
 app.use(moviesRoutes);
 app.use(usersRoutes);
+app.use(indexRoute);
 
 // passport config
 var User = require('./models/user');

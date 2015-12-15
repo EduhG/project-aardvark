@@ -1,22 +1,45 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
+var User = require('../models/user');
 
 var Movie = require('../models/user');
 
 router.route('/sign-up')
-		.get(function(req, res){
-			res.render('users/sign-up');
-		})
-	    // .post(function(req, res) {
-	    //     var username = req.body.username;
-	    //     var password = req.body.password;
-	    //     res.json(
-	    //         { 
-	    //            message: 'signup success',
-	    //             username : username,
-	    //              password : password,
-	    //         }
-	    //     );
-	    // });
-   
+    .get(function(req, res) {
+        res.render('users/sign-up');
+    })
+    .post(function(req, res) {
+        user = new User({
+            username: req.body.username,
+            email: req.body.email
+        });
+        password = req.body.password;
+        User.register(user, password, function(err, user) {
+            if (err) {
+                console.log('User error: ', user, err, err.message);
+                return res.render('users/sign-up', {
+                    'user': user,
+                    'error': err.message
+                });
+            }
+            passport.authenticate('local')(req, res, function() {
+                res.redirect('/movies');
+            });
+        });
+    });
+router.route('/login')
+        .get(function(req, res){
+            res.render('users/login');
+        })
+        .post(passport.authenticate('local', {
+            successRedirect: '/',
+            failureRedirect: '/login'
+        }));
+router.route('/logout')
+        .get(function(req, res){
+            req.logout();
+            res.redirect('/');
+        });
+
 module.exports = router;

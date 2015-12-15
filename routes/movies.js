@@ -1,5 +1,7 @@
 var express = require('express');
+// var path = require('path');
 var router = express.Router();
+// var router = require('express').Router();
 
 var Movie = require('../models/movie');
 
@@ -11,15 +13,16 @@ router.route('/movies')
             .exec(function(err, movies) {
                 if (err) {
                     console.log(err);
-                } else {
+                }
+                 else {
                     // res.redirect('movies');
-                    res.render('/movies/index', {
-                        "movies": movies
+                    res.render('movies/index', {
+                       "movies": movies,
+                       'user': req.logout
                     });
                     // res.json(movies);
                 }
             });
-
     })
     .post(function(req, res) {
         // console.log(req.body);
@@ -40,7 +43,7 @@ router.route('/movies')
 
 router.route('/movies/new')
     .get(function(req, res) {
-        res.render('/movies/snew');
+        res.render('/movies/new');
     });
 
 function updateMovie(method, req, res) {
@@ -61,7 +64,7 @@ function updateMovie(method, req, res) {
             if (method === 'PUT') {
                 res.json(movie);
             } else {
-                res.redirect('/movies' + movie._id);
+                res.redirect('/movies/' + movie._id);
             };
 
 
@@ -96,7 +99,7 @@ router.route('/movies/:id')
         Movie.findById(movieId, function(err, movie) {
             if (err) return console.log(err);
             // res.json(movie);
-            res.render('/movies/detail', {
+            res.render('movies/detail', {
                 "movie": movie
             });
 
@@ -104,20 +107,21 @@ router.route('/movies/:id')
     })
     .put(function(req, res) {
         updateMovie('PUT', req, res);
+        console.log("Movie has been updated now");
     })
     .delete(function(req, res) {
         deleteMovie('DELETE', req, res);
     });
 
 
-router.route('/movies:id/edit')
+router.route('/movies/:id/edit')
     .get(function(req, res) {
         movieId = req.params.id;
         // retrieve movie from Mongodb
         Movie.findById(movieId, function(err, movie) {
             if (err) return console.log(err);
             // res.json(movie);
-            res.render('/movies/edit', {
+            res.render('movies/edit', {
                 "movie": movie
             });
         });
