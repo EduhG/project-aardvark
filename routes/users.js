@@ -28,7 +28,7 @@ router.route('/sign-up')
             });
         });
     });
-router.route('/login')
+      router.route('/login')
         .get(function(req, res){
             res.render('users/login');
         })
@@ -36,10 +36,14 @@ router.route('/login')
             successRedirect: '/',
             failureRedirect: '/login'
         }));
+
 router.route('/logout')
         .get(function(req, res){
             req.logout();
             res.redirect('/');
-        });
+});
 
 module.exports = router;
+
+
+

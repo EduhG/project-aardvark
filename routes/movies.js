@@ -38,14 +38,23 @@ router.route('/movies')
             }
 
         });
-    });
-
+      });
 
 router.route('/movies/new')
     .get(function(req, res) {
-        res.render('/movies/new');
+        res.render('movies/new');
     });
-
+// router.route('/movies/login')
+//     .post(function(req, res) {
+//         console.log(req.body);
+//         if(req.body.username =="ken" && (req.body.password == "1234")){
+//             var x = {user: req.body.username, code: 102};
+//            res.json(x); 
+//         } else{
+//             res.json(409);
+//         }
+        
+//     });
 function updateMovie(method, req, res) {
     movieId = req.params.id;
     userRating = req.body.rating;

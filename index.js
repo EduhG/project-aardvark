@@ -31,6 +31,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/project-aardvark');
 // express setting
+app.set('port', (process.env.PORT || 8081));
 app.engine('html', cons.liquid);
 // app.set('views', './views');
 app.set('views', path.join(__dirname, 'views'));
@@ -38,7 +39,7 @@ app.set('view engine', 'html');
 
 // epress middleware
 app.use(bodyParser.urlencoded({extended: true}));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressSession({
     secret: 'keyboard cat',
@@ -64,6 +65,6 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-app.listen(8081, function() {
-    console.log('Server running on 127.0.0.1:8081');
+app.listen(app.get('port'), function() {
+    console.log('Server running on http://127.0.0.1:%s',app.get('port'));
 });
