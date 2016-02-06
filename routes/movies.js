@@ -15,7 +15,7 @@ router.route('/movies')
                     console.log(err);
                 }
                  else {
-                    // res.redirect('movies');
+                    res.redirect('movies');
                     res.render('movies/index', {
                        "movies": movies,
                        'user': req.logout
